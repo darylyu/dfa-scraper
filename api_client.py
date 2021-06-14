@@ -1,6 +1,7 @@
 import datetime as dt
 import requests
 
+from bs4 import BeautifulSoup
 from dateutil.relativedelta import relativedelta
 
 AVAILABLE_DAYS_URL = "https://www.passport.gov.ph/appointment/timeslot/available"
@@ -78,7 +79,14 @@ def get_available_slots(date, site_id, requested_slots):
         "requiredSlots": requested_slots,
     }
     response = requests.post(AVAILABLE_SLOTS_URL, data=request_data)
-    print(response)
+    soup = BeautifulSoup(response.text, "html.parser")
+    slots = soup.find_all("label")
+    for slot in slots:
+        sched = slot.find_all("span")[2].text
+        availability = slot.find_all("span")[3].text.strip()
+
+        if availability == "Available":
+            print(f" * {sched}")
 
 
 def main():
@@ -106,6 +114,9 @@ def main():
 
     response_data = response.json()
     available_dates = get_available_dates(response_data)
+
+    site_name = SITES[site_id]
+    print(f"Available slots for {site_name}")
     for date in available_dates:
         print(date)
         available_slots = get_available_slots(date, site_id, requested_slots)
