@@ -1,5 +1,5 @@
-import pdb
 import datetime as dt
+from  dateutil.relativedelta import relativedelta
 import requests
 
 AVAILABLE_DAYS_URL = "https://www.passport.gov.ph/appointment/timeslot/available"
@@ -8,7 +8,6 @@ AVAILABLE_SLOTS_URL = "https://www.passport.gov.ph/appointment/timeslot"
 
 
 SITES = {
-    "26": "PUERTO PRINCESA (ROBINSONS PALAWAN)",
     "10": "Angeles (MarQuee Mall,Angeles, Pampanga)",
     "486": "Antipolo (SM Cherry, Antipolo City, Rizal)",
     "11": "Bacolod (Robinsons Bacolod)",
@@ -75,11 +74,19 @@ def get_available_dates(response_data):
 
 def main():
 
+    today = dt.datetime.today()
+
+    # This is required, but their API doesn't actually respect this
+    # and just gives the next 3 months regardless of what you give.
+    #
+    # Just giving this a good buffer if they end up actually fixing this.
+    a_year_later = dt.datetime.today() + relativedelta(weeks=1)
+
     request_data = {
-        "fromDate": "2021-06-14",
-        "toDate": "2022-06-14",
-        "siteId": "17",
-        "requestedSlots": "10",
+        "fromDate": today.strftime("%Y-%m-%d"),
+        "toDate": a_year_later.strftime("%Y-%m-%d"),
+        "siteId": "26",
+        "requestedSlots": "1",
     }
 
     response = requests.post(AVAILABLE_DAYS_URL, data=request_data)
