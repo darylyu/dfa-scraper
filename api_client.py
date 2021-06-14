@@ -1,7 +1,7 @@
 import datetime as dt
 import requests
 
-from  dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta
 
 AVAILABLE_DAYS_URL = "https://www.passport.gov.ph/appointment/timeslot/available"
 
@@ -66,9 +66,7 @@ def get_available_dates(response_data):
         # AVAILABLE_DAYS_URL returns the dates as timestamps
         # while AVAILABLE_SLOTS_URL expects yyyy-mm-dd
         # so we convert them here
-        date_str = dt.datetime.fromtimestamp(timestamp).strftime(
-            "%Y-%m-%d"
-        )
+        date_str = dt.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d")
         available_dates.append(date_str)
     return available_dates
 
