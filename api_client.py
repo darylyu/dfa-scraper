@@ -121,11 +121,12 @@ def get_site_schedule(site_id, requested_slots):
 def main():
 
     # Yes, their API wants ints as strings.
-    site_ids = ["5", "6", "423", "7", "8", "9"]
+    site_ids = SITES.keys()
     requested_slots = "1"
 
     for site_id in site_ids:
         get_site_schedule(site_id, requested_slots)
+
 
 if __name__ == "__main__":
     main()
