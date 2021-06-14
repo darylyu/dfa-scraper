@@ -1,6 +1,7 @@
 import datetime as dt
-from  dateutil.relativedelta import relativedelta
 import requests
+
+from  dateutil.relativedelta import relativedelta
 
 AVAILABLE_DAYS_URL = "https://www.passport.gov.ph/appointment/timeslot/available"
 
@@ -48,6 +49,7 @@ SITES = {
     "30": "Zamboanga (Go-Velayo Bldg. Vet. Ave. Zambo)",
 }
 
+
 def get_available_dates(response_data):
 
     available_dates = []
@@ -71,8 +73,21 @@ def get_available_dates(response_data):
     return available_dates
 
 
+def get_available_slots(date, site_id, requested_slots):
+    request_data = {
+        "preferredDate": date,
+        "siteId": site_id,
+        "requiredSlots": requested_slots,
+    }
+    response = requests.post(AVAILABLE_SLOTS_URL, data=request_data)
+    print(response)
+
 
 def main():
+
+    # Yes, their API wants ints as strings.
+    site_id = "26"
+    requested_slots = "1"
 
     today = dt.datetime.today()
 
@@ -85,16 +100,17 @@ def main():
     request_data = {
         "fromDate": today.strftime("%Y-%m-%d"),
         "toDate": a_year_later.strftime("%Y-%m-%d"),
-        "siteId": "26",
-        "requestedSlots": "1",
+        "siteId": site_id,
+        "requestedSlots": requested_slots,
     }
 
     response = requests.post(AVAILABLE_DAYS_URL, data=request_data)
 
     response_data = response.json()
     available_dates = get_available_dates(response_data)
-    for dates in available_dates:
-        print(dates)
+    for date in available_dates:
+        print(date)
+        available_slots = get_available_slots(date, site_id, requested_slots)
 
 
 if __name__ == "__main__":
