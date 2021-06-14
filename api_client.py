@@ -89,11 +89,7 @@ def get_available_slots(date, site_id, requested_slots):
             print(f" * {sched}")
 
 
-def main():
-
-    # Yes, their API wants ints as strings.
-    site_id = "26"
-    requested_slots = "1"
+def get_site_schedule(site_id, requested_slots):
 
     today = dt.datetime.today()
 
@@ -121,6 +117,15 @@ def main():
         print(date)
         available_slots = get_available_slots(date, site_id, requested_slots)
 
+
+def main():
+
+    # Yes, their API wants ints as strings.
+    site_ids = ["5", "6", "423", "7", "8", "9"]
+    requested_slots = "1"
+
+    for site_id in site_ids:
+        get_site_schedule(site_id, requested_slots)
 
 if __name__ == "__main__":
     main()
