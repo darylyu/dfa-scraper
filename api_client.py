@@ -76,6 +76,8 @@ def get_available_slots(date, site_id, requested_slots):
     request_data = {
         "preferredDate": date,
         "siteId": site_id,
+        # AVAILABLE_DAYS_URL uses "requestedSlots"
+        # while AVAILABLE_SLOTS_URL "requiredSlots"
         "requiredSlots": requested_slots,
     }
     response = requests.post(AVAILABLE_SLOTS_URL, data=request_data)
@@ -97,7 +99,7 @@ def get_site_schedule(site_id, requested_slots):
     # and just gives the next 3 months regardless of what you give.
     #
     # Just giving this a good buffer if they end up actually fixing this.
-    a_year_later = dt.datetime.today() + relativedelta(weeks=1)
+    a_year_later = dt.datetime.today() + relativedelta(years=1)
 
     request_data = {
         "fromDate": today.strftime("%Y-%m-%d"),
